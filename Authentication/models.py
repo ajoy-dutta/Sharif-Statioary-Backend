@@ -1,13 +1,16 @@
+# Authentication/models.py
 from django.db import models
 
-class Person(models.Model):
-    company_name = models.CharField(max_length=255, null=True, blank=True)  # Company name field
-    owner_name = models.CharField(max_length=255, null=True, blank=True)  # Owner name field
-    phone_number_1 = models.CharField(max_length=15, unique=True, null=True, blank=True)  # Phone number 1 field
-    phone_number_2 = models.CharField(max_length=15, unique=True, null=True, blank=True)  # Phone number 2 field
-    address = models.TextField(null=True, blank=True)  # Address field
-    email = models.EmailField(unique=True, null=True, blank=True)  # Email field
-    password = models.CharField(max_length=255)  # Password field
-
+class User(models.Model):
+    company_name = models.CharField(max_length=255)
+    owner_name = models.CharField(max_length=255)
+    phone1 = models.CharField(max_length=15)
+    phone2 = models.CharField(max_length=15, blank=True, null=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
+    extra_field1 = models.CharField(max_length=255, blank=True, null=True)
+    extra_field2 = models.CharField(max_length=255, blank=True, null=True)
+    extra_field3 = models.CharField(max_length=255, blank=True, null=True)
+    
     def __str__(self):
-        return self.company_name  # You can change this to return any other field as well
+        return self.company_name

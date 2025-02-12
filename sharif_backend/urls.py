@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 
+# sharif_backend/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('Authentication.urls')),  
-    path('api/', include('Inventory.urls')),  
-
+    path('api/auth/', include('Authentication.urls')),  # Include the Authentication app URLs
 ]
+

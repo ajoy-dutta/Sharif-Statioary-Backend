@@ -1,7 +1,7 @@
+# Authentication/urls.py
 from django.urls import path
-from .views import*
+from .views import SignUpView
 
 urlpatterns = [
-    path('persons/', ProductListCreateView.as_view(), name='persons'),  # API route
-
+    path('signup/', SignUpView.as_view(), name='signup'),
 ]
