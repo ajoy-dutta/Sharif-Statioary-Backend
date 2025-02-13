@@ -26,7 +26,12 @@ SECRET_KEY = 'django-insecure-2wh14tm5$&#rijy3#mw5v_%r)*fs=uwgs*q13&qekr1y@lu5de
 DEBUG = True
 
 ALLOWED_HOSTS = []
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False  # or True if you want to allow all origins
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Add your frontend's URL here
+    # Add other allowed domains if needed
+]
 
 
 
@@ -77,7 +82,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sharif_backend.wsgi.application'
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -108,6 +117,13 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+# settings.py
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+    'Authentication.authentication_backend.EmailBackend',  # Custom email backend
+]
+
 
 
 # Internationalization
