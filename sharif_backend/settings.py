@@ -38,6 +38,7 @@ CORS_ALLOWED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,10 +120,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 # settings.py
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # Default backend
-    'Authentication.authentication_backend.EmailBackend',  # Custom email backend
-]
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # Keep the default backend
+    'Authentication.authentication_backend.EmailBackend',  # Correct path to your custom backend
+)
+
+
+AUTH_USER_MODEL = 'Authentication.User'  # Change 'Authentication' to your actual app name
+
 
 
 

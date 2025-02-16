@@ -1,11 +1,12 @@
 from rest_framework.views import APIView
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken  # Add this import
 from .models import User
 from .serializers import UserSerializer
-
+User = get_user_model()
 # Sign Up View
 class SignUpView(APIView):
     def post(self, request):
@@ -21,11 +22,17 @@ class SignInView(APIView):
         email = request.data.get("email")
         password = request.data.get("password")
 
-        # Authenticate using email and password
-        user = authenticate(request, username=email, password=password)  # Fix here
-        
+        # Find the user by email
+        try:
+            user_obj = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"success": False, "message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Authenticate using the email field (which should be mapped to username in your User model)
+        user = authenticate(request, username=email, password=password)
+
         if user is not None:
-            # Create refresh and access tokens
+            # Generate tokens for authentication
             refresh = RefreshToken.for_user(user)
             return Response({
                 "success": True,
@@ -33,5 +40,5 @@ class SignInView(APIView):
                 "refresh": str(refresh),
                 "access": str(refresh.access_token)
             }, status=status.HTTP_200_OK)
-        
+
         return Response({"success": False, "message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
