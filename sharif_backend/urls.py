@@ -31,4 +31,3 @@ urlpatterns = [
     path('', views.home),  # Root path should now point to the home view
 ]
 
-
