@@ -1,42 +1,20 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from .models import*
+from django.contrib.auth.models import AbstractUser
 
-# ✅ Custom User Manager
-class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        """Create and return a regular user with an email and password."""
-        if not email:
-            raise ValueError("Users must have an email address")
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)  # ✅ Securely hash password
-        user.save(using=self._db)
-        return user
+class User(AbstractUser):
+    role = models.CharField(max_length=40, default='General', blank=True, null=True)
+    is_approved = models.BooleanField(default=False)
+    profile_picture = models.ImageField(upload_to='image/', blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        """Create and return a superuser with all permissions."""
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        return self.create_user(email, password, **extra_fields)
-
-# ✅ Custom User Model
-class User(AbstractBaseUser, PermissionsMixin):
-    company_name = models.CharField(max_length=255)
-    owner_name = models.CharField(max_length=255)
-    phone1 = models.CharField(max_length=15)
-    phone2 = models.CharField(max_length=15, blank=True, null=True)
-    email = models.EmailField(unique=True)
-    extra_field1 = models.CharField(max_length=255, blank=True, null=True)
-    extra_field2 = models.CharField(max_length=255, blank=True, null=True)
-    extra_field3 = models.CharField(max_length=255, blank=True, null=True)
-
-    is_active = models.BooleanField(default=True)  # ✅ Required for authentication
-    is_staff = models.BooleanField(default=False)  # ✅ Required for admin access
-
-    objects = UserManager()  # ✅ Attach custom manager
-
-    USERNAME_FIELD = 'email'  # ✅ Define email as the login field
-    REQUIRED_FIELDS = ['company_name', 'owner_name']  # Other required fields
+    def save(self, *args, **kwargs):
+        if self.is_superuser:
+            self.role = 'admin'
+            self.is_approved = True
+        elif not self.role:  # If the role is not provided, assign the default 'Assistant Accountant'
+            self.role = 'General'
+        super().save(*args, **kwargs)  # Call the original save method
 
     def __str__(self):
-        return self.email
+        return self.username

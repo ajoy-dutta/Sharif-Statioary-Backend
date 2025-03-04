@@ -15,6 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+from datetime import timedelta 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -26,13 +27,17 @@ SECRET_KEY = 'django-insecure-2wh14tm5$&#rijy3#mw5v_%r)*fs=uwgs*q13&qekr1y@lu5de
 DEBUG = True
 
 ALLOWED_HOSTS = []
-CORS_ALLOW_ALL_ORIGINS = False  # or True if you want to allow all origins
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Add your frontend's URL here
-    # Add other allowed domains if needed
+    'http://127.0.0.1',
 ]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",  # Allow Vite frontend
+]
 
 
 # Application definition
@@ -47,10 +52,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
     'Authentication',
-    'Inventory',       # app for managing inventory
-    'sharif_backend',  # main project app
-
+    'Inventory',     
+    'sharif_backend', 
+    'master',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +71,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'sharif_backend.urls'
+
 
 TEMPLATES = [
     {
@@ -88,51 +95,36 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=100),  # Adjust this time as necessary
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=365),  # Longer lifespan for refresh tokens
+}
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'sharif_stationary_db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+# REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',  # For Token Auth
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-# settings.py
-
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',  # Keep the default backend
-    'Authentication.authentication_backend.EmailBackend',  # Correct path to your custom backend
-)
-
-
-AUTH_USER_MODEL = 'Authentication.User'  # Change 'Authentication' to your actual app name
+AUTH_USER_MODEL = 'Authentication.User'  
 
 
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
