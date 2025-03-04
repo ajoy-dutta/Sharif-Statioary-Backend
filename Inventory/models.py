@@ -70,3 +70,6 @@ class PurchaseItem(models.Model):
     rim_or_dozen_per_sell_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     sheet_or_piece_per_sell_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.product_code} - {self.product_description}"
