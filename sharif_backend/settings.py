@@ -48,9 +48,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'Authentication',
-    'Inventory',       # app for managing inventory
-    'sharif_backend',  # main project app
-
+    'Inventory',     
+    'sharif_backend', 
+    'master',
 ]
 
 MIDDLEWARE = [
