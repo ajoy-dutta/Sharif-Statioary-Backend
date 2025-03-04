@@ -2,6 +2,8 @@ from django.db import models
 
 class Company(models.Model):
     company_name = models.CharField(max_length=255)
+    company_representative_name = models.CharField(max_length=255,null=True,blank=True)
+ 
     phone_number = models.CharField(max_length=20)
     address = models.TextField()
 
