@@ -28,8 +28,10 @@ from sharif_backend import views  # Import views from the sharif_backend app
 urlpatterns = [
     
     path('admin/', admin.site.urls),
-    path('api/auth/', include('Authentication.urls')),  # Include the Authentication app URLs
+    path('api/auth/', include('Authentication.urls')),  
+    # Include the Authentication app URLs
     path('', views.home),  # Root path should now point to the home view
+     path('api/', include('Inventory.urls')),  
 ]
 
 
