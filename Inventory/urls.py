@@ -5,5 +5,5 @@ from .views import*
 urlpatterns = [
 
     path('purchases/', PurchaseCreateView.as_view(), name='payment-list-create'),
-    # path('payments/<int:id>/', PaymentInformationRetrieveUpdateDeleteView.as_view(), name='payment-detail'),
+    path("api/purchases/<int:pk>/", PurchaseRetrieveUpdateDestroyView.as_view(), name="purchase-detail"),
 ]

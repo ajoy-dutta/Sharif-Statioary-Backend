@@ -30,9 +30,9 @@ class Purchase(models.Model):
     def save(self, *args, **kwargs):
 
         total_due = self.invoice_challan_amount - self.today_paid_amount
-        self.balance_amount=total_due
+        self.balance_amount=total_due+ self.company.previous_due
         if self.pk is None:  # Only update when creating a new invoice
-            self.company.previous_due += total_due
+            self.company.previous_due += self.balance_amount
             self.company.save()
 
         super().save(*args, **kwargs)
@@ -70,6 +70,3 @@ class PurchaseItem(models.Model):
     rim_or_dozen_per_sell_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     sheet_or_piece_per_sell_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     remarks = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.product_code} - {self.product_description}"
