@@ -24,3 +24,29 @@ class PurchaseSerializer(serializers.ModelSerializer):
             PurchaseItem.objects.create(purchase=purchase, **item_data)  # Add items to purchase
 
         return purchase
+
+class StockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stock
+        fields = '__all__' 
+
+class SaleItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SaleItem
+        fields = '__all__'
+
+class SaleSerializer(serializers.ModelSerializer):
+    sale_items = SaleItemSerializer(many=True)
+
+    class Meta:
+        model = Sale
+        fields = '__all__'
+
+    def create(self, validated_data):
+        sale_items_data = validated_data.pop('sale_items')
+        sale = Sale.objects.create(**validated_data)
+
+        for item_data in sale_items_data:
+            SaleItem.objects.create(sale=sale, **item_data)
+
+        return sale

@@ -4,3 +4,4 @@ from .models import*
 # Register your models here.
 admin.site.register(Purchase)
 admin.site.register(PurchaseItem)
+admin.site.register(Stock)

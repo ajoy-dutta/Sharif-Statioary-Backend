@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 class Company(models.Model):
     company_name = models.CharField(max_length=255)
@@ -32,3 +33,30 @@ class Godown(models.Model):
 
     def __str__(self):
         return f"{self.godown_name} ({self.shop_name})"
+
+
+class Customer(models.Model):
+    customer_id = models.CharField(max_length=20, editable=False)
+    customer_name = models.CharField(max_length=255, default="Retail Customer")
+    customer_address = models.TextField(blank=True, null=True)
+    customer_phone_no = models.CharField(max_length=20, blank=True, null=True)
+    customer_shop = models.CharField(max_length=255, blank=True, null=True)
+    shop_address = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    due_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)  # New field for outstanding balance
+
+    def save(self, *args, **kwargs):
+        if not self.customer_id:
+            if self.customer_name == "Retail Customer":
+                self.customer_id = "123"
+            else:
+                # Generate new customer ID
+                today_date = date.today().strftime('%d%m%Y')
+                last_customer = Customer.objects.filter(customer_id__startswith=today_date).order_by('-customer_id').first()
+                last_number = int(last_customer.customer_id.split('_')[-1]) + 1 if last_customer else 1
+                self.customer_id = f"{today_date}_{last_number}"
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.customer_id} - {self.customer_name}"

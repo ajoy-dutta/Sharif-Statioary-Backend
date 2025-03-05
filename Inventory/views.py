@@ -19,3 +19,22 @@ class PurchaseRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer
     permission_classes = [IsAuthenticated]
+
+class StockListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+
+    queryset = Stock.objects.all() 
+    serializer_class = StockSerializer  
+
+
+class SaleListCreateView(generics.ListCreateAPIView):
+    queryset = Sale.objects.all()
+    serializer_class = SaleSerializer
+
+    def perform_create(self, serializer):
+        sale = serializer.save()
+        return sale
+
+class SaleDetailView(generics.RetrieveAPIView):
+    queryset = Sale.objects.all()
+    serializer_class = SaleSerializer

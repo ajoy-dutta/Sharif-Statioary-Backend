@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Company, Product, PaymentType, Godown
+from .models import*
 
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,4 +23,9 @@ class PaymentTypeSerializer(serializers.ModelSerializer):
 class GodownSerializer(serializers.ModelSerializer):
     class Meta:
         model = Godown
+        fields = '__all__'
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
         fields = '__all__'

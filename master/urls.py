@@ -13,4 +13,7 @@ urlpatterns = [
 
     path('godowns/', GodownListCreateAPIView.as_view(), name='godown-list-create'),
     path('godowns/<int:pk>/', GodownDestroyUpdateAPIView.as_view(), name='godown-detail'),
+
+    path('customers/', CustomerListView.as_view(), name='customer-list'),
+    path('customers/<int:pk>/', CustomerDetailView.as_view(), name='customer-detail'),
 ]
