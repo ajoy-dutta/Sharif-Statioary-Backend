@@ -3,9 +3,9 @@ from django.db import models
 class Company(models.Model):
     company_name = models.CharField(max_length=255)
     company_representative_name = models.CharField(max_length=255,null=True,blank=True)
- 
     phone_number = models.CharField(max_length=20)
     address = models.TextField()
+    previous_due = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)  # New field for outstanding balance
 
     def __str__(self):
         return self.company_name

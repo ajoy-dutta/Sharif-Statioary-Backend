@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'Authentication',
     'Inventory',     
-    'sharif_backend', 
     'master',
 ]
 
