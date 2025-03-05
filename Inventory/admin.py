@@ -5,3 +5,5 @@ from .models import*
 admin.site.register(Purchase)
 admin.site.register(PurchaseItem)
 admin.site.register(Stock)
+admin.site.register(Sale)
+admin.site.register(SaleItem)
