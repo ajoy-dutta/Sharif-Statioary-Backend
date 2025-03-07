@@ -26,17 +26,22 @@ SECRET_KEY = 'django-insecure-2wh14tm5$&#rijy3#mw5v_%r)*fs=uwgs*q13&qekr1y@lu5de
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sharifstationary.shop', 'www.sharifstationary.shop', '86.48.3.219', '127.0.0.1']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Add your frontend's URL here
-    'http://127.0.0.1',
+    'http://sharifstationary.shop',
+    'https://sharifstationary.shop',
+    
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",  # Allow Vite frontend
+    'https://sharifstationary.shop',
+    'https://www.sharifstationary.shop',
+    'http://127.0.0.1',
 ]
 
 
