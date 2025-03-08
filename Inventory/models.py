@@ -73,22 +73,19 @@ class PurchaseItem(models.Model):
 
     def save(self, *args, **kwargs):
         # Fetch the stock associated with the product
-        try:
-            stock = Stock.objects.get(product=self.product)  # Get the stock for the product
-        except Stock.DoesNotExist:
-            pass
-        if stock:
-            stock.update_stock(
-                self.rim, self.dozen, self.sheet_or_piece, 
+        stock, created = Stock.objects.get_or_create(product=self.product)  # Ensures stock always exists
+
+        stock.update_stock(
+                self.rim, self.dozen, self.only_sheet_piece, 
                 self.per_rim_or_dozen_total_cost, self.per_sheet_or_piece_total_cost, 
                 self.per_rim_or_dozen_sell_amount,self.per_sheet_or_piece_sell_amount
             )
-            stock.last_per_rim_or_dozen_price = self.per_rim_or_dozen_price
-            stock.last_per_sheet_or_piece_price = self.per_sheet_or_piece_price
-            stock.save()
+        stock.last_per_rim_or_dozen_price = self.per_rim_or_dozen_price
+        stock.last_per_sheet_or_piece_price = self.per_sheet_or_piece_price
+        stock.save()
 
         self.total_purchase_price = (
-           self.sheet_or_piece_total_cost +
+           self.per_sheet_or_piece_total_cost +
             self.total_extra_cost
         )
         super().save(*args, **kwargs)
@@ -167,7 +164,7 @@ class Sale(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Sale {self.id} - {self.customer_name} - {self.product.product_description}"
+        return f"Sale {self.id} - {self.customer.company_name} - {self.product.product_description}"
 
 class SaleItem(models.Model):
     sale = models.ForeignKey(Sale, on_delete=models.CASCADE, related_name="sale_items")
