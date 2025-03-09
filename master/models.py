@@ -15,6 +15,7 @@ class Company(models.Model):
 class Product(models.Model):
     PRODUCT_TYPES = [
         ('RIM-A4', 'RIM-A4'),
+         ('DOZEN', 'DOZEN'),
         ('RIM-LEGAL', 'RIM-LEGAL'),
     ]
     product_name = models.CharField(max_length=255)  
