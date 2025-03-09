@@ -22,15 +22,17 @@ class Product(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     product_type = models.CharField(max_length=50, choices=PRODUCT_TYPES)
     product_code = models.CharField(max_length=50, unique=True, blank=True)
+    date = models.DateField(default=now)  
 
     def save(self, *args, **kwargs):
         if not self.product_code:
-            today = self.date.strftime('%d%m%Y')
-            last_product = Product.objects.filter(date=self.date).order_by('-id').first()
-            next_number = last_product.id + 1 if last_product else 1
-            self.product_code = f"{today}-{next_number}" 
-        super().save(*args, **kwargs)
+            today = self.date.strftime('%d%m%Y')  # Format: DDMMYYYY
+            
+            # Get the count of products for the same date
+            product_count = Product.objects.filter(date=self.date).count() + 1
 
+            self.product_code = f"{today}-{product_count}"  # Dynamic numbering
+        super().save(*args, **kwargs)
     def __str__(self):
         return f"{self.product_code} - {self.product_type} - {self.company.company_name}"
 
