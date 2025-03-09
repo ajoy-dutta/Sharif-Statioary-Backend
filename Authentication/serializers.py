@@ -27,7 +27,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             password=validated_data['password'],
             email=validated_data['email'],
-            phone=validated_data.get('phone')  # Assign phone field
+            # phone=validated_data.get('phone')  # Assign phone field
         )
         if 'profile_picture' in validated_data:
             user.profile_picture = validated_data['profile_picture']
@@ -40,7 +40,6 @@ class StaffApproveSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "email", "role", "is_approved", "phone", "profile_picture"]
-        # read_only_fields = ["id", "username", "email", "role"]  # Prevent modification of certain fields
 
     def update(self, instance, validated_data):
         """Ensure 'is_approved' is updated properly"""
