@@ -26,9 +26,8 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.product_code:
-            today = self.date.strftime('%d%m%Y')  # Format: DDMMYYYY
+            today = self.date.strftime('%d%m%Y')  
             
-            # Get the count of products for the same date
             product_count = Product.objects.filter(date=self.date).count() + 1
 
             self.product_code = f"{today}-{product_count}"  # Dynamic numbering
