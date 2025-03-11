@@ -31,11 +31,11 @@ class IsAdmin(BasePermission):
 class UserRegistrationView(ListCreateAPIView):
     permission_classes = [AllowAny]
 
-    queryset = User.objects.all()  # Replace `User` with your model name
+    queryset = User.objects.all() 
     serializer_class = UserRegistrationSerializer
 
     def create(self, request, *args, **kwargs):
-        print("Received data:", request.data)  # Log received data
+        print("Received data:", request.data) 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

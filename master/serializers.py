@@ -12,7 +12,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'company', 'company_id', 'product_code', 'product_description', 'date']
+        fields = ['id', 'company', 'company_id', 'product_code', 'product_name','product_type','date']
 
 
 class PaymentTypeSerializer(serializers.ModelSerializer):
