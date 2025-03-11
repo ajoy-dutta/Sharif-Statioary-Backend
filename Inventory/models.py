@@ -1,36 +1,36 @@
 from django.db import models
 from master.models import*
 
-
 class Purchase(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="invoices")
     order_date = models.DateField()
-    order_no = models.CharField(max_length=100, unique=True)
+    order_no = models.CharField(max_length=100, blank=True, null=True)  
     invoice_challan_date = models.DateField()
-    invoice_challan_no = models.CharField(max_length=100, unique=True)
+    invoice_challan_no = models.CharField(max_length=100, blank=True, null=True) 
     transport_type = models.CharField(max_length=100)
     delivery_date = models.DateField()
-    delivery_no = models.CharField(max_length=100, unique=True)
-    driver_name = models.CharField(max_length=100,blank=True,null=True)
-    driver_mobile_no = models.CharField(max_length=15,blank=True,null=True)
-    vehicle_no = models.CharField(max_length=50,blank=True,null=True)
-    godown=models.ForeignKey(Godown, on_delete=models.CASCADE, related_name="godwons")
-    entry_by = models.CharField(max_length=100,blank=True,null=True)
+    delivery_no = models.CharField(max_length=100, blank=True, null=True)  
+    driver_name = models.CharField(max_length=100, blank=True, null=True)
+    driver_mobile_no = models.CharField(max_length=15, blank=True, null=True)
+    vehicle_no = models.CharField(max_length=50, blank=True, null=True)
+    godown = models.ForeignKey(Godown, on_delete=models.CASCADE, related_name="godwons")
+    entry_by = models.CharField(max_length=100, blank=True, null=True)
     remarks = models.TextField(blank=True, null=True)
 
     previous_due = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     invoice_challan_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     today_paid_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
-    payment_type =models.CharField(max_length=100)
+    payment_type = models.CharField(max_length=100)
     bank_name = models.CharField(max_length=255, blank=True, null=True)
     account_no = models.CharField(max_length=100, blank=True, null=True)
     cheque_no = models.CharField(max_length=100, blank=True, null=True)
     cheque_date = models.DateField(blank=True, null=True)
     balance_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+
     def save(self, *args, **kwargs):
-        self.previous_due=self.company.previous_due
+        self.previous_due = self.company.previous_due
         total_due = self.invoice_challan_amount - self.today_paid_amount
-        self.balance_amount=total_due+ self.company.previous_due
+        self.balance_amount = total_due + self.company.previous_due
         self.company.previous_due = self.balance_amount
         self.company.save()
 
