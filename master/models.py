@@ -2,6 +2,7 @@ from django.db import models
 from datetime import date
 from django.utils.timezone import now
 
+
 class Company(models.Model):
     company_name = models.CharField(max_length=255)
     company_representative_name = models.CharField(max_length=255,null=True,blank=True)
@@ -26,11 +27,10 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.product_code:
-            today = self.date.strftime('%d%m%Y')  
-            
+            today = self.date.strftime('%Y%m%d')  
             product_count = Product.objects.filter(date=self.date).count() + 1
+            self.product_code = f"{today}-{product_count}"
 
-            self.product_code = f"{today}-{product_count}"  # Dynamic numbering
         super().save(*args, **kwargs)
     def __str__(self):
         return f"{self.product_code} - {self.product_type} - {self.company.company_name}"
