@@ -122,7 +122,7 @@ class PurchaseItem(models.Model):
         self.purchase.save()
 
     def __str__(self):
-        return f"{self.product.product_code} - {self.product.product_description}"
+        return f"{self.product.product_code} - {self.product.product_name}"
 
 
 class Stock(models.Model):
@@ -170,7 +170,7 @@ class Stock(models.Model):
         self.save()
 
     def __str__(self):
-        return f"{self.product.product_code} - {self.product.product_description} (Stock: {self.rim} rims, {self.dozen} dozens, {self.sheet_or_piece} sheets/pieces)"
+        return f"{self.product.product_code} - {self.product.product_name} (Stock: {self.rim} rims, {self.dozen} dozens, {self.sheet_or_piece} sheets/pieces)"
 
 class Sale(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="customer")
@@ -289,4 +289,4 @@ class SaleItem(models.Model):
         self.sale.save()
 
     def __str__(self):
-        return f"Sale Item {self.product.product.product_code} - {self.product.product.product_description}"
+        return f"Sale Item {self.product.product.product_code} - {self.product.product.product_name}"
