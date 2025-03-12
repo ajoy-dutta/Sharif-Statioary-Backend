@@ -2,7 +2,7 @@ from django.db import models
 from master.models import*
 
 class Purchase(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="invoices")
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="invoices", blank=True, null=True)
     order_date = models.DateField()
     order_no = models.CharField(max_length=100, blank=True, null=True)  
     invoice_challan_date = models.DateField()
@@ -13,14 +13,14 @@ class Purchase(models.Model):
     driver_name = models.CharField(max_length=100, blank=True, null=True)
     driver_mobile_no = models.CharField(max_length=15, blank=True, null=True)
     vehicle_no = models.CharField(max_length=50, blank=True, null=True)
-    godown = models.ForeignKey(Godown, on_delete=models.CASCADE, related_name="godwons")
+    godown = models.ForeignKey(Godown, on_delete=models.CASCADE, related_name="godwons", blank=True, null=True)
     entry_by = models.CharField(max_length=100, blank=True, null=True)
     remarks = models.TextField(blank=True, null=True)
 
     previous_due = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     invoice_challan_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     today_paid_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
-    payment_type = models.CharField(max_length=100)
+    payment_type = models.CharField(max_length=100, blank=True, null=True)
     bank_name = models.CharField(max_length=255, blank=True, null=True)
     account_no = models.CharField(max_length=100, blank=True, null=True)
     cheque_no = models.CharField(max_length=100, blank=True, null=True)
@@ -28,16 +28,23 @@ class Purchase(models.Model):
     balance_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
 
     def save(self, *args, **kwargs):
-        self.previous_due = self.company.previous_due
-        total_due = self.invoice_challan_amount - self.today_paid_amount
-        self.balance_amount = total_due + self.company.previous_due
-        self.company.previous_due = self.balance_amount
-        self.company.save()
+        # Ensure previous_due calculation only if company exists
+        if self.company:
+            self.previous_due = self.company.previous_due
+            total_due = self.invoice_challan_amount - self.today_paid_amount
+            self.balance_amount = total_due + self.company.previous_due
+            self.company.previous_due = self.balance_amount
+            self.company.save()
+        else:
+            # If no company is selected, set defaults
+            self.previous_due = 0.00
+            self.balance_amount = self.invoice_challan_amount - self.today_paid_amount
 
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Invoice {self.invoice_challan_no} - {self.company.company_name}"
+        return f"Invoice {self.invoice_challan_no} - {self.company.company_name if self.company else 'No Company'}"
+
 
 
 class PurchaseItem(models.Model):
