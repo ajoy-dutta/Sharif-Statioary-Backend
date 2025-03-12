@@ -28,16 +28,22 @@ class Purchase(models.Model):
     balance_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
 
     def save(self, *args, **kwargs):
-        self.previous_due = self.company.previous_due
-        total_due = self.invoice_challan_amount - self.today_paid_amount
-        self.balance_amount = total_due + self.company.previous_due
-        self.company.previous_due = self.balance_amount
-        self.company.save()
+        # Ensure previous_due calculation only if company exists
+        if self.company:
+            self.previous_due = self.company.previous_due
+            total_due = self.invoice_challan_amount - self.today_paid_amount
+            self.balance_amount = total_due + self.company.previous_due
+            self.company.previous_due = self.balance_amount
+            self.company.save()
+        else:
+            # If no company is selected, set defaults
+            self.previous_due = 0.00
+            self.balance_amount = self.invoice_challan_amount - self.today_paid_amount
 
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Invoice {self.invoice_challan_no} - {self.company.company_name}"
+        return f"Invoice {self.invoice_challan_no} - {self.company.company_name if self.company else 'No Company'}"
 
 
 
