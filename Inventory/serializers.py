@@ -1,29 +1,29 @@
 from rest_framework import serializers
 from .models import*
 
+
 class PurchaseItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchaseItem
-        fields = '__all__'  # Include all fields
+        exclude = ['purchase']  # ✅ Exclude 'purchase' so it's auto-handled
 
 class PurchaseSerializer(serializers.ModelSerializer):
-    items = PurchaseItemSerializer(many=True)  # Allow multiple items in a single purchase
+    items = PurchaseItemSerializer(many=True)  # ✅ Accept multiple items
 
     class Meta:
         model = Purchase
-        fields = '__all__'  # Include all fields including items
+        fields = '__all__'  
 
     def create(self, validated_data):
-        """
-        Override create to handle nested PurchaseItem data.
-        """
-        items_data = validated_data.pop('items')  # Extract items data
-        purchase = Purchase.objects.create(**validated_data)  # Create the Purchase instance
-
+        items_data = validated_data.pop('items', [])  # ✅ Extract items list
+        purchase = Purchase.objects.create(**validated_data)  # ✅ Create Purchase first
+        
         for item_data in items_data:
-            PurchaseItem.objects.create(purchase=purchase, **item_data)  # Add items to purchase
-
+            PurchaseItem.objects.create(purchase=purchase, **item_data)  # ✅ Link items to purchase
+        
         return purchase
+
+
 
 class StockSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.product_name', read_only=True)
