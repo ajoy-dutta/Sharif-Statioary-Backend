@@ -42,7 +42,7 @@ class Purchase(models.Model):
 
 class PurchaseItem(models.Model):
     purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE) 
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     purchase_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     rim = models.IntegerField(default=0)
     dozen = models.IntegerField(default=0)
@@ -290,3 +290,4 @@ class SaleItem(models.Model):
 
     def __str__(self):
         return f"Sale Item {self.product.product.product_code} - {self.product.product.product_name}"
+

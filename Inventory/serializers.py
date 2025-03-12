@@ -4,7 +4,7 @@ from .models import*
 class PurchaseItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchaseItem
-        fields = '__all__'  # Include all fields
+        fields = '__all__'
 
 class PurchaseSerializer(serializers.ModelSerializer):
     items = PurchaseItemSerializer(many=True)  # Allow multiple items in a single purchase
