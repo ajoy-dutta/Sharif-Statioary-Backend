@@ -26,6 +26,8 @@ class PurchaseSerializer(serializers.ModelSerializer):
         return purchase
 
 class StockSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source='product.product_name', read_only=True)
+    
     class Meta:
         model = Stock
         fields = '__all__' 
@@ -36,14 +38,14 @@ class SaleItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SaleSerializer(serializers.ModelSerializer):
-    sale_items = SaleItemSerializer(many=True)
+    items = SaleItemSerializer(many=True)
 
     class Meta:
         model = Sale
         fields = '__all__'
 
     def create(self, validated_data):
-        sale_items_data = validated_data.pop('sale_items')
+        sale_items_data = validated_data.pop('items')
         sale = Sale.objects.create(**validated_data)
 
         for item_data in sale_items_data:

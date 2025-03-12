@@ -172,6 +172,7 @@ class Stock(models.Model):
     def __str__(self):
         return f"{self.product.product_code} - {self.product.product_name} (Stock: {self.rim} rims, {self.dozen} dozens, {self.sheet_or_piece} sheets/pieces)"
 
+
 class Sale(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="customer")
     sale_date = models.DateField(auto_now_add=True)
